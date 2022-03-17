@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WorkshopApplication.Core;
+using WorkshopApplication.Infrastructure.Configs;
 
 namespace WorkshopApplication.Infrastructure;
 
@@ -12,5 +13,12 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
     {
         
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new ApplicationConfig());
+        modelBuilder.ApplyConfiguration(new ParticipantConfig());
+        modelBuilder.ApplyConfiguration(new WorkshopConfig());
     }
 }

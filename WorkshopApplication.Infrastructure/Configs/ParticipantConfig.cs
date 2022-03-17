@@ -35,6 +35,7 @@ public class ParticipantConfig : IEntityTypeConfiguration<Participant>
         builder
             .HasOne(p => p.Application)
             .WithOne(a => a.Participant)
-            .HasForeignKey<Application>(a => a.ParticipantId);
+            .HasForeignKey<Application>(a => a.ParticipantId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
