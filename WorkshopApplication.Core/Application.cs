@@ -8,5 +8,6 @@ public class Application : BaseEntity
     public string Reason { get; set; }
     public Guid ParticipantId { get; set; }
     public Participant Participant { get; set; }
+    public Guid WorkshopId { get; set; }
     public Workshop Workshop { get; set; }
 }

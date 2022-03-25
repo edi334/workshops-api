@@ -3,7 +3,9 @@ using Microsoft.Extensions.Options;
 using MySqlConnector;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WorkshopApplication.API;
+using WorkshopApplication.Core;
 using WorkshopApplication.Infrastructure;
+using WorkshopApplication.Infrastructure.Repo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, serverVersion, 
         x => x.MigrationsAssembly("WorkshopApplication.API"));
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddScoped<IGenericRepository<Application>, GenericRepository<Application>>();
+builder.Services.AddScoped<IGenericRepository<Workshop>, GenericRepository<Workshop>>();
+builder.Services.AddScoped<IGenericRepository<Participant>, GenericRepository<Participant>>();
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen();
