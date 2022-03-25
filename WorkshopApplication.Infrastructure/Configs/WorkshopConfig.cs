@@ -11,11 +11,13 @@ public class WorkshopConfig : IEntityTypeConfiguration<Workshop>
     {
         builder.HasKey(w => w.Id);
         builder.Property(w => w.Id)
+            .HasColumnType("varchar")
+            .HasMaxLength(36)
             .ValueGeneratedOnAdd();
 
         builder.Property(w => w.Name)
             .IsRequired()
-            .HasColumnType("varchar(30)")
+            .HasColumnType("varchar")
             .HasMaxLength(30);
 
         builder.Property(w => w.Description)
@@ -23,7 +25,7 @@ public class WorkshopConfig : IEntityTypeConfiguration<Workshop>
             .HasColumnType("longtext");
 
         builder.Property(w => w.Category)
-            .HasColumnType("varchar(10)")
+            .HasColumnType("varchar")
             .HasMaxLength(10)
             .HasDefaultValue("");
     }

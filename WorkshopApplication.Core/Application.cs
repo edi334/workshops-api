@@ -1,8 +1,7 @@
 namespace WorkshopApplication.Core;
 
-public class Application
+public class Application : BaseEntity
 {
-    public Guid Id { get; set; }
     public string Country { get; set; }
     public string University { get; set; }
     public string FieldOfStudy { get; set; }

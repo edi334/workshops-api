@@ -10,25 +10,27 @@ public class ParticipantConfig : IEntityTypeConfiguration<Participant>
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
+            .HasColumnType("varchar")
+            .HasMaxLength(36)
             .ValueGeneratedOnAdd();
 
         builder.Property(p => p.FirstName)
             .IsRequired()
-            .HasColumnType("varchar(30)")
+            .HasColumnType("varchar")
             .HasMaxLength(30);
 
         builder.Property(p => p.LastName)
             .IsRequired()
-            .HasColumnType("varchar(30)")
+            .HasColumnType("varchar")
             .HasMaxLength(30);
 
         builder.Property(p => p.Email)
-            .HasColumnType("varchar(100)")
+            .HasColumnType("varchar")
             .HasMaxLength(100)
             .HasDefaultValue("");
         
         builder.Property(p => p.PhoneNumber)
-            .HasColumnType("varchar(100)")
+            .HasColumnType("varchar")
             .HasMaxLength(100)
             .HasDefaultValue("");
 

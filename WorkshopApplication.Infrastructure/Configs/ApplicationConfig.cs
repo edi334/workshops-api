@@ -11,21 +11,23 @@ public class ApplicationConfig : IEntityTypeConfiguration<Application>
     {
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Id)
+            .HasColumnType("varchar")
+            .HasMaxLength(36)
             .ValueGeneratedOnAdd();
 
         builder.Property(a => a.Country)
             .IsRequired()
-            .HasColumnType("varchar(50)")
+            .HasColumnType("varchar")
             .HasMaxLength(50);
 
         builder.Property(a => a.University)
             .IsRequired()
-            .HasColumnType("varchar(50)")
+            .HasColumnType("varchar")
             .HasMaxLength(50);
 
         builder.Property(a => a.FieldOfStudy)
             .IsRequired()
-            .HasColumnType("varchar(20)")
+            .HasColumnType("varchar")
             .HasMaxLength(20);
 
         builder.Property(a => a.Reason)

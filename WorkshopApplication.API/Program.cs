@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MySqlConnector;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WorkshopApplication.API;
 using WorkshopApplication.Infrastructure;
@@ -10,9 +11,11 @@ var connectionString = builder.Configuration.GetConnectionString("WorkShopAppCon
 
 builder.Services.AddControllers();
 
+var serverVersion = new MySqlServerVersion(new Version(10, 7, 3));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(connectionString, 
+    options.UseMySql(connectionString, serverVersion, 
         x => x.MigrationsAssembly("WorkshopApplication.API"));
 });
 
