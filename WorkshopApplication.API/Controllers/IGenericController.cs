@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using WorkshopApplication.Core;
-
 namespace WorkshopApplication.API.Controllers;
 
 public interface IGenericController<TDto>
