@@ -28,7 +28,7 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
         return Ok(response);
     }
 
-    [HttpGet]
+    [HttpGet("{id}")]
     public async Task<ActionResult<ParticipantDto>> GetById(Guid id)
     {
         var participant = await _repository.GetByIdAsync(id);
@@ -42,18 +42,30 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
         return Ok(response);
     }
 
-    public Task<ActionResult<ParticipantDto>> Add(ParticipantDto entityDto)
+    [HttpPost]
+    public async Task<ActionResult<ParticipantDto>> Add(ParticipantDto entityDto)
     {
-        throw new NotImplementedException();
+        var participant = _mapper.Map<Participant>(entityDto);
+        var response = await _repository.AddAsync(participant);
+
+        return Ok(response);
     }
 
-    public Task<ActionResult<ParticipantDto>> Update(ParticipantDto entityDto)
+    [HttpPatch]
+    public async Task<ActionResult<ParticipantDto>> Update(ParticipantDto entityDto)
     {
-        throw new NotImplementedException();
+        var participant = _mapper.Map<Participant>(entityDto);
+        var response = await _repository.UpdateAsync(participant);
+
+        return Ok(response);
     }
 
-    public Task<ActionResult<ParticipantDto>> Delete(ParticipantDto entityDto)
+    [HttpDelete]
+    public async Task<ActionResult<ParticipantDto>> Delete(ParticipantDto entityDto)
     {
-        throw new NotImplementedException();
+        var participant = _mapper.Map<Participant>(entityDto);
+        var response = await _repository.DeleteAsync(participant);
+
+        return Ok(response);
     }
 }

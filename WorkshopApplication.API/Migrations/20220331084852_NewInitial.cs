@@ -4,7 +4,7 @@
 
 namespace WorkshopApplication.API.Migrations
 {
-    public partial class UpdatePKTypes : Migration
+    public partial class NewInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

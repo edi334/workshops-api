@@ -10,8 +10,8 @@ using WorkshopApplication.Infrastructure;
 namespace WorkshopApplication.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220325083456_UpdatePKTypes")]
-    partial class UpdatePKTypes
+    [Migration("20220331084852_NewInitial")]
+    partial class NewInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
