@@ -11,12 +11,16 @@ namespace WorkshopApplication.API.Controllers;
 public class ApplicationController : ControllerBase
 {
     private readonly IGenericRepository<Application> _repository;
+    private readonly IGenericRepository<Participant> _participantRepo;
+    private readonly IGenericRepository<Workshop> _workshopRepo;
     private readonly IMapper _mapper;
 
-    public ApplicationController(IGenericRepository<Application> repository, IMapper mapper)
+    public ApplicationController(IGenericRepository<Application> repository, IMapper mapper, IGenericRepository<Workshop> workshopRepo, IGenericRepository<Participant> participantRepo)
     {
         _repository = repository;
         _mapper = mapper;
+        _workshopRepo = workshopRepo;
+        _participantRepo = participantRepo;
     }
 
 
@@ -47,9 +51,11 @@ public class ApplicationController : ControllerBase
     public async Task<ActionResult<ApplicationResponseDto>> Add(ApplicationRequestDto entityDto)
     {
         var application = _mapper.Map<Application>(entityDto);
-        var response = _mapper.Map<ApplicationResponseDto>( await _repository.AddAsync(application));
+        application.Participant = await _participantRepo.GetByIdAsync(Guid.Parse(entityDto.ParticipantId));
+        application.Workshop = await _workshopRepo.GetByIdAsync(Guid.Parse(entityDto.WorkshopId));
+        //var response = _mapper.Map<ApplicationResponseDto>( await _repository.AddAsync(application));
 
-        return Ok(response);
+        return Ok(application);
     }
 
     [HttpPatch]
@@ -62,7 +68,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult<ApplicationDto>> Delete(ApplicationDto entityDto)
+    public async Task<ActionResult<ApplicationResponseDto>> Delete(ApplicationRequestDto entityDto)
     {
         var application = _mapper.Map<Application>(entityDto);
         var response =_mapper.Map<ApplicationResponseDto>(await _repository.DeleteAsync(application));

@@ -2,6 +2,6 @@ namespace WorkshopApplication.API.Dtos;
 
 public class ApplicationRequestDto : ApplicationDto
 {
-    public Guid ParticipantId { get; set; }
-    public Guid WorkshopId { get; set; }
+    public string ParticipantId { get; set; }
+    public string WorkshopId { get; set; }
 }
