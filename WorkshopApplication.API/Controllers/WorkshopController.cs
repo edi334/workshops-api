@@ -1,32 +1,72 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WorkshopApplication.API.Dtos;
+using WorkshopApplication.Core;
+using WorkshopApplication.Infrastructure.Repo;
 
 namespace WorkshopApplication.API.Controllers;
 
+[ApiController]
+[Route("/api/workshop")]
 public class WorkshopController : ControllerBase, IGenericController<WorkshopDto>
 {
-    public Task<ActionResult<List<WorkshopDto>>> GetAll()
+    private readonly IGenericRepository<Workshop> _repository;
+    private readonly IMapper _mapper;
+
+    public WorkshopController(IGenericRepository<Workshop> repository, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _repository = repository;
+        _mapper = mapper;
     }
 
-    public Task<ActionResult<WorkshopDto>> GetById(Guid id)
+    [HttpGet]
+    public async Task<ActionResult<List<WorkshopDto>>> GetAll()
     {
-        throw new NotImplementedException();
+        var workshops = await _repository.GetAllAsync();
+        var response = _mapper.Map<List<WorkshopDto>>(workshops);
+
+        return Ok(response);
     }
 
-    public Task<ActionResult<WorkshopDto>> Add(WorkshopDto entityDto)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<WorkshopDto>> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var workshop = await _repository.GetByIdAsync(id);
+
+        if (workshop is null)
+        {
+            return NotFound();
+        }
+
+        var response = _mapper.Map<WorkshopDto>(workshop);
+
+        return Ok(response);
     }
 
-    public Task<ActionResult<WorkshopDto>> Update(WorkshopDto entityDto)
+    [HttpPost]
+    public async Task<ActionResult<WorkshopDto>> Add(WorkshopDto entityDto)
     {
-        throw new NotImplementedException();
+        var workshop = _mapper.Map<Workshop>(entityDto);
+        var response = _mapper.Map<WorkshopDto>(await _repository.AddAsync(workshop));
+
+        return Ok(response);
     }
 
-    public Task<ActionResult<WorkshopDto>> Delete(WorkshopDto entityDto)
+    [HttpPatch]
+    public async Task<ActionResult<WorkshopDto>> Update(WorkshopDto entityDto)
     {
-        throw new NotImplementedException();
+        var workshop = _mapper.Map<Workshop>(entityDto);
+        var response = _mapper.Map<WorkshopDto>(await _repository.UpdateAsync(workshop));
+
+        return Ok(response);
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult<WorkshopDto>> Delete(WorkshopDto entityDto)
+    {
+        var workshop = _mapper.Map<Workshop>(entityDto);
+        var response = _mapper.Map<WorkshopDto>(await _repository.DeleteAsync(workshop));
+
+        return Ok(response);
     }
 }

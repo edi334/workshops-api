@@ -46,7 +46,7 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
     public async Task<ActionResult<ParticipantDto>> Add(ParticipantDto entityDto)
     {
         var participant = _mapper.Map<Participant>(entityDto);
-        var response = await _repository.AddAsync(participant);
+        var response = _mapper.Map<ParticipantDto>(await _repository.AddAsync(participant));
 
         return Ok(response);
     }
@@ -55,7 +55,7 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
     public async Task<ActionResult<ParticipantDto>> Update(ParticipantDto entityDto)
     {
         var participant = _mapper.Map<Participant>(entityDto);
-        var response = await _repository.UpdateAsync(participant);
+        var response = _mapper.Map<ParticipantDto>(await _repository.UpdateAsync(participant));
 
         return Ok(response);
     }
@@ -64,7 +64,7 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
     public async Task<ActionResult<ParticipantDto>> Delete(ParticipantDto entityDto)
     {
         var participant = _mapper.Map<Participant>(entityDto);
-        var response = await _repository.DeleteAsync(participant);
+        var response = _mapper.Map<ParticipantDto>(await _repository.DeleteAsync(participant));
 
         return Ok(response);
     }
