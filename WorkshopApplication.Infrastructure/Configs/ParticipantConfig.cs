@@ -33,11 +33,5 @@ public class ParticipantConfig : IEntityTypeConfiguration<Participant>
             .HasColumnType("varchar")
             .HasMaxLength(100)
             .HasDefaultValue("");
-
-        builder
-            .HasOne(p => p.Application)
-            .WithOne(a => a.Participant)
-            .HasForeignKey<Application>(a => a.ParticipantId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

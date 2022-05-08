@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WorkshopApplication.API.Dtos;
 using WorkshopApplication.Core;
 using WorkshopApplication.Infrastructure.Repo;
@@ -15,9 +16,15 @@ public class ApplicationController : ControllerBase
     private readonly IGenericRepository<Workshop> _workshopRepo;
     private readonly IMapper _mapper;
 
-    public ApplicationController(IGenericRepository<Application> repository, IMapper mapper, IGenericRepository<Workshop> workshopRepo, IGenericRepository<Participant> participantRepo)
+    public ApplicationController(IGenericRepository<Application> repository,
+        IMapper mapper, 
+        IGenericRepository<Workshop> workshopRepo,
+        IGenericRepository<Participant> participantRepo)
     {
         _repository = repository;
+        _repository.ChainQueryable(q => q
+            .Include(a => a.Workshop)
+            .Include(a => a.Participant));
         _mapper = mapper;
         _workshopRepo = workshopRepo;
         _participantRepo = participantRepo;
@@ -33,10 +40,10 @@ public class ApplicationController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ApplicationResponseDto>> GetById(Guid id)
+    [HttpGet("{entityId}")]
+    public async Task<ActionResult<ApplicationResponseDto>> GetById(Guid entityId)
     {
-        var application = await _repository.GetByIdAsync(id);
+        var application = await _repository.GetByIdAsync(entityId);
 
         if (application is null)
         {
@@ -51,27 +58,51 @@ public class ApplicationController : ControllerBase
     public async Task<ActionResult<ApplicationResponseDto>> Add(ApplicationRequestDto entityDto)
     {
         var application = _mapper.Map<Application>(entityDto);
-        application.Participant = await _participantRepo.GetByIdAsync(Guid.Parse(entityDto.ParticipantId));
-        application.Workshop = await _workshopRepo.GetByIdAsync(Guid.Parse(entityDto.WorkshopId));
-        //var response = _mapper.Map<ApplicationResponseDto>( await _repository.AddAsync(application));
-
-        return Ok(application);
-    }
-
-    [HttpPatch]
-    public async Task<ActionResult<ApplicationResponseDto>> Update(ApplicationRequestDto entityDto)
-    {
-        var application = _mapper.Map<Application>(entityDto);
-        var response = _mapper.Map<ApplicationResponseDto>(await _repository.UpdateAsync(application));
+        application.WorkshopId = entityDto.WorkshopId;
+        application.ParticipantId = entityDto.ParticipantId;
+        var dbApplication = await _repository.AddAsync(application);
+        
+        var mappedWorkshop = _mapper.Map<WorkshopDto>(dbApplication.Workshop);
+        var mappedParticipant = _mapper.Map<ParticipantDto>(dbApplication.Participant);
+        var response = new ApplicationResponseDto
+        {
+            Country = dbApplication.Country,
+            Reason = dbApplication.Reason,
+            University = dbApplication.University,
+            FieldOfStudy = dbApplication.FieldOfStudy,
+            Workshop = mappedWorkshop,
+            Participant = mappedParticipant
+        };
 
         return Ok(response);
     }
 
-    [HttpDelete]
-    public async Task<ActionResult<ApplicationResponseDto>> Delete(ApplicationRequestDto entityDto)
+    [HttpPatch("{entityId}")]
+    public async Task<ActionResult<ApplicationResponseDto>> Update([FromRoute] Guid entityId, ApplicationRequestDto entityDto)
     {
-        var application = _mapper.Map<Application>(entityDto);
-        var response =_mapper.Map<ApplicationResponseDto>(await _repository.DeleteAsync(application));
+        var existingApplication = await _repository.GetByIdAsync(entityId);
+
+        if (existingApplication is null)
+        {
+            return BadRequest("Application doesn't exist!");
+        }
+
+        existingApplication.Country = entityDto.Country;
+        existingApplication.University = entityDto.University;
+        existingApplication.FieldOfStudy = entityDto.FieldOfStudy;
+        existingApplication.Reason = entityDto.Reason;
+        existingApplication.ParticipantId = entityDto.ParticipantId;
+        existingApplication.WorkshopId = entityDto.WorkshopId;
+
+        var response = _mapper.Map<ApplicationResponseDto>(await _repository.UpdateAsync(existingApplication));
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{entityId}")]
+    public async Task<ActionResult<ApplicationResponseDto>> Delete([FromRoute] Guid entityId)
+    {
+        var response =_mapper.Map<ApplicationResponseDto>(await _repository.DeleteAsync(entityId));
 
         return Ok(response);
     }

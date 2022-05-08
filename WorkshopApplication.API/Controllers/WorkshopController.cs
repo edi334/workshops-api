@@ -28,10 +28,10 @@ public class WorkshopController : ControllerBase, IGenericController<WorkshopDto
         return Ok(response);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<WorkshopDto>> GetById(Guid id)
+    [HttpGet("{entityId}")]
+    public async Task<ActionResult<WorkshopDto>> GetById([FromRoute] Guid entityId)
     {
-        var workshop = await _repository.GetByIdAsync(id);
+        var workshop = await _repository.GetByIdAsync(entityId);
 
         if (workshop is null)
         {
@@ -52,21 +52,29 @@ public class WorkshopController : ControllerBase, IGenericController<WorkshopDto
         return Ok(response);
     }
 
-    [HttpPatch]
-    public async Task<ActionResult<WorkshopDto>> Update(WorkshopDto entityDto)
+    [HttpPatch("{entityId}")]
+    public async Task<ActionResult<WorkshopDto>> Update([FromRoute] Guid entityId, WorkshopDto entityDto)
     {
-        var workshop = _mapper.Map<Workshop>(entityDto);
-        var response = _mapper.Map<WorkshopDto>(await _repository.UpdateAsync(workshop));
+        var existingWorkshop = await _repository.GetByIdAsync(entityId);
+
+        if (existingWorkshop is null)
+        {
+            return BadRequest("Workshop not found!");
+        }
+
+        existingWorkshop.Name = entityDto.Name;
+        existingWorkshop.Description = entityDto.Description;
+        existingWorkshop.Category = entityDto.Category;
+        
+        var response = _mapper.Map<WorkshopDto>(await _repository.UpdateAsync(existingWorkshop));
 
         return Ok(response);
     }
 
-    [HttpDelete]
-    public async Task<ActionResult<WorkshopDto>> Delete(WorkshopDto entityDto)
+    [HttpDelete("{entityId}")]
+    public async Task<ActionResult<WorkshopDto>> Delete([FromRoute] Guid entityId)
     {
-        var workshop = _mapper.Map<Workshop>(entityDto);
-        var response = _mapper.Map<WorkshopDto>(await _repository.DeleteAsync(workshop));
-
+        var response = _mapper.Map<WorkshopDto>(await _repository.DeleteAsync(entityId));
         return Ok(response);
     }
 }

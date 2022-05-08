@@ -28,10 +28,10 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
         return Ok(response);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ParticipantDto>> GetById(Guid id)
+    [HttpGet("{entityId}")]
+    public async Task<ActionResult<ParticipantDto>> GetById([FromRoute] Guid entityId)
     {
-        var participant = await _repository.GetByIdAsync(id);
+        var participant = await _repository.GetByIdAsync(entityId);
 
         if (participant is null)
         {
@@ -51,21 +51,30 @@ public class ParticipantController : ControllerBase, IGenericController<Particip
         return Ok(response);
     }
 
-    [HttpPatch]
-    public async Task<ActionResult<ParticipantDto>> Update(ParticipantDto entityDto)
+    [HttpPatch("{entityId}")]
+    public async Task<ActionResult<ParticipantDto>> Update([FromRoute] Guid entityId, ParticipantDto entityDto)
     {
-        var participant = _mapper.Map<Participant>(entityDto);
-        var response = _mapper.Map<ParticipantDto>(await _repository.UpdateAsync(participant));
+        var existingParticipant = await _repository.GetByIdAsync(entityId);
+
+        if (existingParticipant is null)
+        {
+            return BadRequest("Participant not found!");
+        }
+
+        existingParticipant.FirstName = entityDto.FirstName;
+        existingParticipant.LastName = entityDto.LastName;
+        existingParticipant.PhoneNumber = entityDto.PhoneNumber;
+        existingParticipant.Email = entityDto.Email;
+        
+        var response = _mapper.Map<ParticipantDto>(await _repository.UpdateAsync(existingParticipant));
 
         return Ok(response);
     }
 
-    [HttpDelete]
-    public async Task<ActionResult<ParticipantDto>> Delete(ParticipantDto entityDto)
+    [HttpDelete("{entityId}")]
+    public async Task<ActionResult<ParticipantDto>> Delete([FromRoute] Guid entityId)
     {
-        var participant = _mapper.Map<Participant>(entityDto);
-        var response = _mapper.Map<ParticipantDto>(await _repository.DeleteAsync(participant));
-
+        var response = _mapper.Map<ParticipantDto>(await _repository.DeleteAsync(entityId));
         return Ok(response);
     }
 }

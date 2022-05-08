@@ -35,6 +35,11 @@ public class ApplicationConfig : IEntityTypeConfiguration<Application>
             .HasColumnType("longtext");
 
         builder
+            .HasOne(a => a.Participant)
+            .WithOne(p => p.Application)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .HasOne(a => a.Workshop)
             .WithMany(w => w.Applications);
     }
