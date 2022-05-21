@@ -28,7 +28,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("WorkshopsApiCors", builder =>
     {
         builder
-            .WithOrigins("localhost:4200")
+            .WithOrigins("http://localhost:4200")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });

@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {Workshop} from "../../../models/workshop";
+import {firstValueFrom} from "rxjs";
+import {WorkshopsService} from "../../services/workshops.service";
+import {MatDialog} from "@angular/material/dialog";
+import {WorkshopsFormComponent} from "./workshops-form/workshops-form.component";
 
 @Component({
   selector: 'app-worshops',
@@ -6,10 +11,28 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./worshops.component.scss']
 })
 export class WorshopsComponent implements OnInit {
+  workshops: Workshop[] = [];
 
-  constructor() { }
+  constructor(
+    private readonly _workshopsService: WorkshopsService,
+    private readonly _dialog: MatDialog
+  ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.workshops = await this._workshopsService.getAll();
+  }
+
+  async delete(id: string): Promise<void> {
+    await this._workshopsService.delete(id);
+    this.workshops = await this._workshopsService.getAll();
+  }
+
+  openDialog(): void {
+    const dialogRef = this._dialog.open(WorkshopsFormComponent);
+
+    dialogRef.afterClosed().subscribe(async () => {
+      this.workshops = await this._workshopsService.getAll();
+    })
   }
 
 }

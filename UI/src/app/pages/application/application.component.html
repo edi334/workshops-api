@@ -1,1 +1,13 @@
-<p>application works!</p>
+<div class="page-container">
+  <h3>Applications</h3>
+  <button mat-button color="primary" (click)="openDialog()">Add Application</button>
+  <mat-card *ngFor="let application of applications">
+    <p><b>Participant Name</b>: {{application.participant.firstName + ' ' + application.participant.lastName}}</p>
+    <p><b>Workshop Name</b>: {{application.workshop.name}}</p>
+    <p><b>Country</b>: {{application.country}}</p>
+    <p><b>University</b>: {{application.university}}</p>
+    <p><b>Field of Study</b>: {{application.fieldOfStudy}}</p>
+    <p><b>Reason</b>: {{application.reason}}</p>
+    <button mat-button color="primary" (click)="delete(application.id)">Delete</button>
+  </mat-card>
+</div>

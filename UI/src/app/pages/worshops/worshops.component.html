@@ -1,1 +1,10 @@
-<p>worshops works!</p>
+<div class="page-container">
+  <h3>Workshops</h3>
+  <button mat-button color="primary" (click)="openDialog()">Add Workshop</button>
+  <mat-card *ngFor="let workshop of workshops">
+    <p><b>Name</b>: {{workshop.name}}</p>
+    <p><b>Category</b>: {{workshop.category}}</p>
+    <p><b>Description</b>: {{workshop.description}}</p>
+    <button mat-button color="primary" (click)="delete(workshop.id)">Delete</button>
+  </mat-card>
+</div>

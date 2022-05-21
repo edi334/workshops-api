@@ -57,6 +57,15 @@ public class ApplicationController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ApplicationResponseDto>> Add(ApplicationRequestDto entityDto)
     {
+        var existingApplications = await _repository.GetAllAsync();
+        var applicationWithParticipant =
+            existingApplications.FirstOrDefault(a => a.ParticipantId == entityDto.ParticipantId);
+
+        if (applicationWithParticipant != null)
+        {
+            return BadRequest("Participant already applied for a workshop!");
+        }
+        
         var application = _mapper.Map<Application>(entityDto);
         application.WorkshopId = entityDto.WorkshopId;
         application.ParticipantId = entityDto.ParticipantId;

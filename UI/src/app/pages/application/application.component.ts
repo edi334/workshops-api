@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import {ApplicationResponse} from "../../../models/application-response";
+import {ApplicationsService} from "../../services/applications.service";
+import {MatDialog} from "@angular/material/dialog";
+import {ApplicationsFormComponent} from "./applications-form/applications-form.component";
+import {ParticipantsService} from "../../services/participants.service";
+import {WorkshopsService} from "../../services/workshops.service";
 
 @Component({
   selector: 'app-application',
@@ -6,10 +12,36 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./application.component.scss']
 })
 export class ApplicationComponent implements OnInit {
+  applications: ApplicationResponse[] = [];
 
-  constructor() { }
+  constructor(
+    private readonly _applicationsService: ApplicationsService,
+    private readonly _participantsService: ParticipantsService,
+    private readonly _workshopsService: WorkshopsService,
+    private readonly _dialog: MatDialog
+  ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.applications = await this._applicationsService.getAll();
   }
 
+  async delete(id: string): Promise<void> {
+    console.log(id);
+    await this._applicationsService.delete(id);
+    this.applications = await this._applicationsService.getAll();
+  }
+
+  async openDialog(): Promise<void> {
+    const participants = (await this._participantsService.getAll())
+      .filter(p => this.applications.map(a => a.participant).find(x => x.id === p.id) === undefined);
+    const workshops = await this._workshopsService.getAll();
+
+    const dialogRef = this._dialog.open(ApplicationsFormComponent, {
+      data: {participants: participants, workshops: workshops}
+    });
+
+    dialogRef.afterClosed().subscribe(async () => {
+      this.applications = await this._applicationsService.getAll();
+    });
+  }
 }

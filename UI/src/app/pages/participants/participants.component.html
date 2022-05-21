@@ -1,1 +1,11 @@
-<p>participants works!</p>
+<div class="page-container">
+  <h3>Participants</h3>
+  <button mat-button color="primary" (click)="openDialog()">Add Participant</button>
+  <mat-card *ngFor="let participant of participants">
+    <p><b>First Name</b>: {{participant.firstName}}</p>
+    <p><b>Last Name</b>: {{participant.lastName}}</p>
+    <p><b>Email</b>: {{participant.email}}</p>
+    <p><b>Phone Number</b>: {{participant.phoneNumber}}</p>
+    <button mat-button color="primary" (click)="delete(participant.id)">Delete</button>
+  </mat-card>
+</div>

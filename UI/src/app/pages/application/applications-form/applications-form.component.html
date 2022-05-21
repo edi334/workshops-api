@@ -1,0 +1,59 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Participant</mat-label>
+    <mat-select formControlName="participantId">
+      <mat-option *ngFor="let participant of data.participants" [value]="participant.id">
+        {{participant.firstName + ' ' + participant.lastName}}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('participantId')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Workshop</mat-label>
+    <mat-select formControlName="workshopId">
+      <mat-option *ngFor="let workshop of data.workshops" [value]="workshop.id">
+        {{workshop.name}}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('workshopId')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Country</mat-label>
+    <input matInput formControlName="country">
+    <mat-error *ngIf="form.get('country')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>University</mat-label>
+    <input matInput formControlName="university">
+    <mat-error *ngIf="form.get('university')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Field of Study</mat-label>
+    <input matInput formControlName="fieldOfStudy">
+    <mat-error *ngIf="form.get('fieldOfStudy')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Reason</mat-label>
+    <textarea matInput formControlName="reason"></textarea>
+    <mat-error *ngIf="form.get('reason')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-button color="primary" (click)="save()">Save</button>
+</form>

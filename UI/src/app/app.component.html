@@ -1,2 +1,16 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+  <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="router.navigate(['participants'])">
+    <span>Participants</span>
+  </button>
+  <button mat-menu-item (click)="router.navigate(['workshops'])">
+    <span>Workshops</span>
+  </button>
+  <button mat-menu-item (click)="router.navigate(['applications'])">
+    <span>Applications</span>
+  </button>
+</mat-menu>
 <router-outlet></router-outlet>
 

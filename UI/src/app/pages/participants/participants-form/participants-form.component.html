@@ -1,0 +1,41 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>First Name</mat-label>
+    <input matInput formControlName="firstName">
+    <mat-error *ngIf="form.get('firstName')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Last Name</mat-label>
+    <input matInput formControlName="lastName">
+    <mat-error *ngIf="form.get('lastName')!.hasError('required')">
+      This field is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email">
+    <mat-error *ngIf="form.get('email')!.hasError('required')">
+      This field is required
+    </mat-error>
+    <mat-error *ngIf="!form.get('email')!.hasError('required') && form.get('email')!.hasError('email')">
+      This is not a valid email
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Phone Number</mat-label>
+    <input matInput formControlName="phoneNumber">
+    <mat-error *ngIf="form.get('phoneNumber')!.hasError('required')">
+      This field is required
+    </mat-error>
+    <mat-error *ngIf="!form.get('phoneNumber')!.hasError('required') && form.get('phoneNumber')!.hasError('pattern')">
+      This is not a valid phone number
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-button color="primary" (click)="save()">Save</button>
+</form>
