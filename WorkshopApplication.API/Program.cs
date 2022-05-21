@@ -23,6 +23,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WorkshopsApiCors", builder =>
+    {
+        builder
+            .WithOrigins("localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddScoped<IGenericRepository<Application>, GenericRepository<Application>>();
 builder.Services.AddScoped<IGenericRepository<Workshop>, GenericRepository<Workshop>>();
 builder.Services.AddScoped<IGenericRepository<Participant>, GenericRepository<Participant>>();
@@ -42,6 +53,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
+app.UseCors("WorkshopsApiCors");
 
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 

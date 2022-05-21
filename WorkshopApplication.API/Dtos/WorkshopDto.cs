@@ -4,6 +4,8 @@ namespace WorkshopApplication.API.Dtos;
 
 public class WorkshopDto
 {
+    public string? Id { get; set; }
+    
     [Required]
     [MaxLength(30)]
     public string Name { get; set; }
