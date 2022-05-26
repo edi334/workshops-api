@@ -5,6 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ApplicationsFormComponent} from "./applications-form/applications-form.component";
 import {ParticipantsService} from "../../services/participants.service";
 import {WorkshopsService} from "../../services/workshops.service";
+import {Application} from '../../../models/application';
 
 @Component({
   selector: 'app-application',
@@ -26,18 +27,17 @@ export class ApplicationComponent implements OnInit {
   }
 
   async delete(id: string): Promise<void> {
-    console.log(id);
     await this._applicationsService.delete(id);
     this.applications = await this._applicationsService.getAll();
   }
 
-  async openDialog(): Promise<void> {
+  async openDialog(application?: ApplicationResponse): Promise<void> {
     const participants = (await this._participantsService.getAll())
       .filter(p => this.applications.map(a => a.participant).find(x => x.id === p.id) === undefined);
     const workshops = await this._workshopsService.getAll();
 
     const dialogRef = this._dialog.open(ApplicationsFormComponent, {
-      data: {participants: participants, workshops: workshops}
+      data: {participants: participants, workshops: workshops, application: application}
     });
 
     dialogRef.afterClosed().subscribe(async () => {

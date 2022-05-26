@@ -15,6 +15,11 @@ export class ParticipantsService {
   ) {
   }
 
+  async getById(id: string): Promise<Participant> {
+    const url = this._baseUrl + `/${id}`;
+    return await firstValueFrom(this._http.get<Participant>(url));
+  }
+
   async getAll(): Promise<Participant[]> {
     return await firstValueFrom(this._http.get<Participant[]>(this._baseUrl));
   }
@@ -26,5 +31,10 @@ export class ParticipantsService {
   async delete(id: string): Promise<Participant> {
     const url = this._baseUrl + `/${id}`;
     return await firstValueFrom(this._http.delete<Participant>(url));
+  }
+
+  async patch(id: string, participant: Participant): Promise<Participant> {
+    const url = this._baseUrl + `/${id}`;
+    return await firstValueFrom(this._http.patch<Participant>(url, participant));
   }
 }

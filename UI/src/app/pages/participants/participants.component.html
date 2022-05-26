@@ -7,5 +7,6 @@
     <p><b>Email</b>: {{participant.email}}</p>
     <p><b>Phone Number</b>: {{participant.phoneNumber}}</p>
     <button mat-button color="primary" (click)="delete(participant.id)">Delete</button>
+    <button mat-button color="primary" (click)="openDialog(participant)">Edit</button>
   </mat-card>
 </div>

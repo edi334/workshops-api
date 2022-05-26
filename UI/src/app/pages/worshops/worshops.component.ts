@@ -27,8 +27,10 @@ export class WorshopsComponent implements OnInit {
     this.workshops = await this._workshopsService.getAll();
   }
 
-  openDialog(): void {
-    const dialogRef = this._dialog.open(WorkshopsFormComponent);
+  openDialog(workshop?: Workshop): void {
+    const dialogRef = this._dialog.open(WorkshopsFormComponent, {
+      data: {workshop: workshop}
+    });
 
     dialogRef.afterClosed().subscribe(async () => {
       this.workshops = await this._workshopsService.getAll();

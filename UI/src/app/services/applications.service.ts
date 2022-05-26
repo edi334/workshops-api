@@ -5,6 +5,7 @@ import {ApplicationResponse} from "../../models/application-response";
 import {firstValueFrom} from "rxjs";
 import {ApplicationRequest} from "../../models/application-request";
 import {Participant} from "../../models/participant";
+import {Application} from '../../models/application';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,10 @@ export class ApplicationsService {
   async delete(id: string): Promise<ApplicationResponse> {
     const url = this._baseUrl + `/${id}`;
     return await firstValueFrom(this._http.delete<ApplicationResponse>(url));
+  }
+
+  async patch(id: string, application: ApplicationRequest): Promise<ApplicationResponse> {
+    const url = this._baseUrl + `/${id}`;
+    return await firstValueFrom(this._http.patch<ApplicationResponse>(url, application));
   }
 }

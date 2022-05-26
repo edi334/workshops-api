@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {ParticipantsService} from "../../../services/participants.service";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Participant} from '../../../../models/participant';
+
+interface DialogData {
+  participant?: Participant
+}
 
 @Component({
   selector: 'app-participants-form',
   templateUrl: './participants-form.component.html',
   styleUrls: ['./participants-form.component.scss']
 })
-export class ParticipantsFormComponent {
+export class ParticipantsFormComponent implements OnInit {
   form = this._formBuilder.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
@@ -20,7 +25,8 @@ export class ParticipantsFormComponent {
   constructor(
     private readonly _formBuilder: FormBuilder,
     private readonly _participantsService: ParticipantsService,
-    private readonly _dialogRef: MatDialogRef<ParticipantsFormComponent>
+    private readonly _dialogRef: MatDialogRef<ParticipantsFormComponent>,
+    @Inject(MAT_DIALOG_DATA) private readonly _data: DialogData
   ) { }
 
   async save(): Promise<void> {
@@ -31,11 +37,21 @@ export class ParticipantsFormComponent {
     }
 
     try {
-      await this._participantsService.post(this.form.value);
+      if (this._data.participant) {
+          await this._participantsService.patch(this._data.participant.id, this.form.value);
+      } else {
+        await this._participantsService.post(this.form.value);
+      }
     } catch {
       window.alert('Oops something went wrong!');
     }
 
     this._dialogRef.close();
+  }
+
+  ngOnInit(): void {
+    if (this._data.participant) {
+      this.form.patchValue(this._data.participant);
+    }
   }
 }

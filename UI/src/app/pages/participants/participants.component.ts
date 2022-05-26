@@ -26,8 +26,10 @@ export class ParticipantsComponent implements OnInit {
     this.participants = await this._participantsService.getAll();
   }
 
-  openDialog(): void {
-    const dialogRef = this._dialog.open(ParticipantsFormComponent);
+  openDialog(participant?: Participant): void {
+    const dialogRef = this._dialog.open(ParticipantsFormComponent, {
+      data: {participant: participant}
+    });
 
     dialogRef.afterClosed().subscribe(async () => {
       this.participants = await this._participantsService.getAll();
